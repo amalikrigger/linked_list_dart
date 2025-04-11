@@ -1,7 +1,3 @@
-int calculate() {
-  return 6 * 7;
-}
-
 class Node {
   Object value;
   Node? next;
@@ -9,15 +5,15 @@ class Node {
 }
 
 class LinkedList {
-  Node? head;
-  int size = 0;
+  Node? _head;
+  int _size = 0;
 
   LinkedList();
 
   @override
   String toString() {
     var output = '';
-    var current = head;
+    var current = _head;
     while (current != null) {
       output += '${current.value} -> ';
       current = current.next;
@@ -27,7 +23,7 @@ class LinkedList {
 
   List<Object> toList() {
     final values = <Object>[];
-    var current = head;
+    var current = _head;
     while (current != null) {
       values.add(current.value);
       current = current.next;
@@ -36,35 +32,35 @@ class LinkedList {
   }
 
   void prepend(Object value) {
-    if (head == null) {
-      head = Node(value, null);
+    if (_head == null) {
+      _head = Node(value, null);
     } else {
-      var node = Node(value, head);
-      head = node;
+      var node = Node(value, _head);
+      _head = node;
     }
-    size++;
+    _size++;
   }
 
   void append(Object value) {
-    if (head == null) {
-      head = Node(value, null);
+    if (_head == null) {
+      _head = Node(value, null);
     } else {
-      var currentNode = head!;
+      var currentNode = _head!;
       while (currentNode.next != null) {
         currentNode = currentNode.next!;
       }
       currentNode.next = Node(value, null);
     }
-    size++;
+    _size++;
   }
 
   int indexOf(Object value) {
-    if (head == null) {
+    if (_head == null) {
       return -1;
     } else {
-      var currentNode = head;
+      var currentNode = _head;
       int i = 0;
-      while (i < size) {
+      while (i < _size) {
         if (currentNode?.value != value) {
           currentNode = currentNode?.next;
           i++;
@@ -77,13 +73,13 @@ class LinkedList {
   }
 
   Object? get(int index) {
-    if (index >= size) {
+    if (index >= _size) {
       throw IndexError;
     }
-    if (head == null) {
+    if (_head == null) {
       return null;
     } else {
-      var currentNode = head;
+      var currentNode = _head;
       var i = 0;
       while (i != index) {
         currentNode = currentNode?.next;
@@ -94,13 +90,13 @@ class LinkedList {
   }
 
   void insertAt(Object value, int index) {
-    if (index >= size) {
+    if (index >= _size) {
       throw IndexError;
     }
-    if (head == null || index == 0) {
-      head = Node(value, head);
+    if (_head == null || index == 0) {
+      _head = Node(value, _head);
     } else {
-      var currentNode = head;
+      var currentNode = _head;
       var i = 0;
       while (i < index - 1) {
         currentNode = currentNode?.next;
@@ -108,20 +104,20 @@ class LinkedList {
       }
       currentNode?.next = Node(value, currentNode.next);
     }
-    size++;
+    _size++;
   }
 
   void deleteAt(int index) {
-    if (index >= size) {
+    if (index >= _size) {
       throw IndexError;
     }
-    if (head == null) {
+    if (_head == null) {
       return;
     } else {
       if (index == 0) {
-        head = head?.next;
+        _head = _head?.next;
       }
-      var currentNode = head;
+      var currentNode = _head;
       int i = 0;
       while (i < index - 1) {
         currentNode = currentNode?.next;
@@ -129,28 +125,28 @@ class LinkedList {
       }
       currentNode?.next = currentNode.next?.next;
     }
-    size--;
+    _size--;
   }
 
   void deleteByValue(Object value) {
-    if (head == null) {
+    if (_head == null) {
       return;
     } else {
-      var currentNode = head;
+      var currentNode = _head;
       Node? previousNode;
       int i = 0;
-      while (i < size) {
+      while (i < _size) {
         if (currentNode?.value != value) {
           previousNode = currentNode;
           currentNode = currentNode?.next;
           i++;
         } else {
           if (i == 0) {
-            head = currentNode?.next;
+            _head = currentNode?.next;
           } else {
             previousNode?.next = currentNode?.next;
           }
-          size--;
+          _size--;
           break;
         }
       }
@@ -166,22 +162,22 @@ class LinkedList {
   }
 
   void clear() {
-    head = null;
-    size = 0;
+    _head = null;
+    _size = 0;
   }
 
   int length() {
-    return size;
+    return _size;
   }
 
   void reverse() {
-    if (head == null || size <= 1) {
+    if (_head == null || _size <= 1) {
       return;
     } else {
       var start = 0;
-      var end = size - 1;
-      var currentNode = head;
-      var startNode = head;
+      var end = _size - 1;
+      var currentNode = _head;
+      var startNode = _head;
       while (start < end) {
         int i = 0;
         while (i < end) {
@@ -198,5 +194,19 @@ class LinkedList {
         end--;
       }
     }
+  }
+
+  void reverseList() {
+    var current = _head;
+    Node? prev;
+
+    while (current != null) {
+      final next = current.next;
+      current.next = prev;
+      prev = current;
+      current = next;
+    }
+
+    _head = prev;
   }
 }
