@@ -271,5 +271,48 @@ void main() {
       expect(list.toList(), []);
     });
 
+    test('hasCycle returns false on empty list', () {
+      final list = LinkedList();
+      expect(list.hasCycle(), isFalse);
+    });
+
+    test('hasCycle returns false on single node without cycle', () {
+      final list = LinkedList();
+      list.append(1);
+      expect(list.hasCycle(), isFalse);
+    });
+
+    test('hasCycle returns true on single node with cycle', () {
+      final node = Node(1, null);
+      node.next = node; // self-cycle
+      final list = LinkedList();
+      list.head = node;
+      expect(list.hasCycle(), isTrue);
+    });
+
+    test('hasCycle returns false on multiple nodes without cycle', () {
+      final list = LinkedList();
+      list.append(1);
+      list.append(2);
+      list.append(3);
+      expect(list.hasCycle(), isFalse);
+    });
+
+    test('hasCycle returns true on multiple nodes with cycle', () {
+      final list = LinkedList();
+      list.append(1);
+      list.append(2);
+      list.append(3);
+
+      // Creating cycle manually
+      final firstNode = list.head;
+      final secondNode = firstNode?.next;
+      final thirdNode = secondNode?.next;
+      thirdNode?.next = secondNode; // creates a cycle at node with value 2
+
+      expect(list.hasCycle(), isTrue);
+    });
+
+
   });
 }

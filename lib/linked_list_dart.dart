@@ -5,7 +5,7 @@ class Node {
 }
 
 class LinkedList {
-  Node? _head;
+  Node? head;
   int _size = 0;
 
   LinkedList();
@@ -13,7 +13,7 @@ class LinkedList {
   @override
   String toString() {
     var output = '';
-    var current = _head;
+    var current = head;
     while (current != null) {
       output += '${current.value} -> ';
       current = current.next;
@@ -23,7 +23,7 @@ class LinkedList {
 
   List<Object> toList() {
     final values = <Object>[];
-    var current = _head;
+    var current = head;
     while (current != null) {
       values.add(current.value);
       current = current.next;
@@ -32,20 +32,20 @@ class LinkedList {
   }
 
   void prepend(Object value) {
-    if (_head == null) {
-      _head = Node(value, null);
+    if (head == null) {
+      head = Node(value, null);
     } else {
-      var node = Node(value, _head);
-      _head = node;
+      var node = Node(value, head);
+      head = node;
     }
     _size++;
   }
 
   void append(Object value) {
-    if (_head == null) {
-      _head = Node(value, null);
+    if (head == null) {
+      head = Node(value, null);
     } else {
-      var currentNode = _head!;
+      var currentNode = head!;
       while (currentNode.next != null) {
         currentNode = currentNode.next!;
       }
@@ -55,10 +55,10 @@ class LinkedList {
   }
 
   int indexOf(Object value) {
-    if (_head == null) {
+    if (head == null) {
       return -1;
     } else {
-      var currentNode = _head;
+      var currentNode = head;
       int i = 0;
       while (i < _size) {
         if (currentNode?.value != value) {
@@ -76,10 +76,10 @@ class LinkedList {
     if (index >= _size) {
       throw IndexError;
     }
-    if (_head == null) {
+    if (head == null) {
       return null;
     } else {
-      var currentNode = _head;
+      var currentNode = head;
       var i = 0;
       while (i != index) {
         currentNode = currentNode?.next;
@@ -93,10 +93,10 @@ class LinkedList {
     if (index >= _size) {
       throw IndexError;
     }
-    if (_head == null || index == 0) {
-      _head = Node(value, _head);
+    if (head == null || index == 0) {
+      head = Node(value, head);
     } else {
-      var currentNode = _head;
+      var currentNode = head;
       var i = 0;
       while (i < index - 1) {
         currentNode = currentNode?.next;
@@ -111,13 +111,13 @@ class LinkedList {
     if (index >= _size) {
       throw IndexError;
     }
-    if (_head == null) {
+    if (head == null) {
       return;
     } else {
       if (index == 0) {
-        _head = _head?.next;
+        head = head?.next;
       }
-      var currentNode = _head;
+      var currentNode = head;
       int i = 0;
       while (i < index - 1) {
         currentNode = currentNode?.next;
@@ -129,10 +129,10 @@ class LinkedList {
   }
 
   void deleteByValue(Object value) {
-    if (_head == null) {
+    if (head == null) {
       return;
     } else {
-      var currentNode = _head;
+      var currentNode = head;
       Node? previousNode;
       int i = 0;
       while (i < _size) {
@@ -142,7 +142,7 @@ class LinkedList {
           i++;
         } else {
           if (i == 0) {
-            _head = currentNode?.next;
+            head = currentNode?.next;
           } else {
             previousNode?.next = currentNode?.next;
           }
@@ -162,7 +162,7 @@ class LinkedList {
   }
 
   void clear() {
-    _head = null;
+    head = null;
     _size = 0;
   }
 
@@ -171,13 +171,13 @@ class LinkedList {
   }
 
   void reverse() {
-    if (_head == null || _size <= 1) {
+    if (head == null || _size <= 1) {
       return;
     } else {
       var start = 0;
       var end = _size - 1;
-      var currentNode = _head;
-      var startNode = _head;
+      var currentNode = head;
+      var startNode = head;
       while (start < end) {
         int i = 0;
         while (i < end) {
@@ -197,7 +197,7 @@ class LinkedList {
   }
 
   void reverseList() {
-    var current = _head;
+    var current = head;
     Node? prev;
 
     while (current != null) {
@@ -207,6 +207,20 @@ class LinkedList {
       current = next;
     }
 
-    _head = prev;
+    head = prev;
+  }
+
+  bool hasCycle() {
+    var fast = head;
+    var slow = head;
+
+    while (fast != null && fast.next != null) {
+      slow = slow?.next;
+      fast = fast.next?.next;
+      if (slow == fast) {
+        return true;
+      }
+    }
+    return false;
   }
 }
