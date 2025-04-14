@@ -1,11 +1,12 @@
-class Node {
-  Object value;
-  Node? next;
-  Node(this.value, this.next);
+class Node<T> {
+  final T value;
+  Node<T>? next;
+
+  Node(this.value, [this.next]);
 }
 
-class LinkedList {
-  Node? head;
+class LinkedList<T> {
+  Node<T>? head;
   int _size = 0;
 
   LinkedList();
@@ -21,8 +22,8 @@ class LinkedList {
     return '${output}null';
   }
 
-  List<Object> toList() {
-    final values = <Object>[];
+  List<T> toList() {
+    final values = <T>[];
     var current = head;
     while (current != null) {
       values.add(current.value);
@@ -31,45 +32,34 @@ class LinkedList {
     return values;
   }
 
-  void prepend(Object value) {
-    if (head == null) {
-      head = Node(value, null);
-    } else {
-      var node = Node(value, head);
-      head = node;
-    }
+  void prepend(T value) {
+    head = Node(value, head);
     _size++;
   }
 
-  void append(Object value) {
+  void append(T value) {
+    final newNode = Node(value);
     if (head == null) {
-      head = Node(value, null);
+      head = newNode;
     } else {
-      var currentNode = head!;
-      while (currentNode.next != null) {
-        currentNode = currentNode.next!;
+      var current = head;
+      while (current!.next != null) {
+        current = current.next;
       }
-      currentNode.next = Node(value, null);
+      current.next = newNode;
     }
     _size++;
   }
 
   int indexOf(Object value) {
-    if (head == null) {
-      return -1;
-    } else {
-      var currentNode = head;
-      int i = 0;
-      while (i < _size) {
-        if (currentNode?.value != value) {
-          currentNode = currentNode?.next;
-          i++;
-        } else {
-          return i;
-        }
-      }
-      return -1;
+    var current = head;
+    int index = 0;
+    while (current != null) {
+      if (current.value == value) return index;
+      current = current.next;
+      index++;
     }
+    return -1;
   }
 
   Object? get(int index) {
@@ -89,7 +79,7 @@ class LinkedList {
     }
   }
 
-  void insertAt(Object value, int index) {
+  void insertAt(T value, int index) {
     if (index >= _size) {
       throw IndexError;
     }
@@ -108,48 +98,37 @@ class LinkedList {
   }
 
   void deleteAt(int index) {
-    if (index >= _size) {
-      throw IndexError;
-    }
-    if (head == null) {
-      return;
+    if (index < 0 || index >= _size) throw IndexError;
+
+    if (index == 0) {
+      head = head?.next;
     } else {
-      if (index == 0) {
-        head = head?.next;
+      var current = head;
+      for (int i = 0; i < index - 1; i++) {
+        current = current?.next;
       }
-      var currentNode = head;
-      int i = 0;
-      while (i < index - 1) {
-        currentNode = currentNode?.next;
-        i++;
-      }
-      currentNode?.next = currentNode.next?.next;
+      current?.next = current.next?.next;
     }
     _size--;
   }
 
   void deleteByValue(Object value) {
-    if (head == null) {
+    if (head == null) return;
+
+    if (head!.value == value) {
+      head = head!.next;
+      _size--;
       return;
-    } else {
-      var currentNode = head;
-      Node? previousNode;
-      int i = 0;
-      while (i < _size) {
-        if (currentNode?.value != value) {
-          previousNode = currentNode;
-          currentNode = currentNode?.next;
-          i++;
-        } else {
-          if (i == 0) {
-            head = currentNode?.next;
-          } else {
-            previousNode?.next = currentNode?.next;
-          }
-          _size--;
-          break;
-        }
+    }
+
+    var current = head;
+    while (current?.next != null) {
+      if (current!.next!.value == value) {
+        current.next = current.next!.next;
+        _size--;
+        return;
       }
+      current = current.next;
     }
   }
 
@@ -171,34 +150,8 @@ class LinkedList {
   }
 
   void reverse() {
-    if (head == null || _size <= 1) {
-      return;
-    } else {
-      var start = 0;
-      var end = _size - 1;
-      var currentNode = head;
-      var startNode = head;
-      while (start < end) {
-        int i = 0;
-        while (i < end) {
-          if (start == i) {
-            startNode = currentNode;
-          }
-          currentNode = currentNode?.next;
-          i++;
-        }
-        var tempNode = Node(startNode!.value, startNode.next);
-        startNode.value = currentNode!.value;
-        currentNode.value = tempNode.value;
-        start++;
-        end--;
-      }
-    }
-  }
-
-  void reverseList() {
     var current = head;
-    Node? prev;
+    Node<T>? prev;
 
     while (current != null) {
       final next = current.next;
@@ -224,3 +177,14 @@ class LinkedList {
     return false;
   }
 }
+
+extension IterableLinkedList on LinkedList {
+  Iterable<Object> get iterable sync* {
+    var current = head;
+    while (current != null) {
+      yield current.value;
+      current = current.next;
+    }
+  }
+}
+

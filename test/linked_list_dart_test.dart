@@ -254,20 +254,20 @@ void main() {
       list.append(1);
       list.append(2);
       list.append(3);
-      list.reverseList();
+      list.reverse();
       expect(list.toList(), [3, 2, 1]);
     });
 
     test('reverseList() single element list remains unchanged', () {
       final list = LinkedList();
       list.append(99);
-      list.reverseList();
+      list.reverse();
       expect(list.toList(), [99]);
     });
 
     test('reverseList() on empty list does nothing', () {
       final list = LinkedList();
-      list.reverseList();
+      list.reverse();
       expect(list.toList(), []);
     });
 
